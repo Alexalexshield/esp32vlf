@@ -22,6 +22,7 @@ void mcpwm_gpio_initialize()
     mcpwm_set_pin(MCPWM_UNIT_0, &pin_config);
 }
 
+
 /**
  * @brief Configure whole MCPWM module
  */
@@ -44,7 +45,7 @@ void mcpwm_config(void *arg)
     //add rising edge delay or falling edge delay. There are 8 different types, each explained in mcpwm_deadtime_type_t in mcpwm.h
     mcpwm_deadtime_enable(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 0, 0);   //Enable deadtime on PWM0A and PWM0B with red = (1000)*100ns on PWM0A
 
-   // vTaskDelete(NULL);
+    vTaskDelete(NULL);
 }
 
 void start_vlf_tx(uint8_t message){

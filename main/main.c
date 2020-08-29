@@ -30,11 +30,15 @@
 
 void app_main()
 {
+
+    ble_server_init();
+
     init_vlf_tx();
+    
     uint8_t local_message = ALARM_CODE;
     start_vlf_tx(local_message);
 
-    ble_server_init();
+    // vTaskDelete(NULL);
 
 }
 

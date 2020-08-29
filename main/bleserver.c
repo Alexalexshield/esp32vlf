@@ -35,20 +35,20 @@
 #include "bleserver.h"
 
 
-uint8_t char1_str[] = {0x11,0x22,0x33};
-esp_gatt_char_prop_t a_property = 0;
+static uint8_t char1_str[] = {0x11,0x22,0x33};
+static esp_gatt_char_prop_t a_property = 0;
 
-esp_attr_value_t gatts_demo_char1_val =
+static esp_attr_value_t gatts_demo_char1_val =
 {
     .attr_max_len = GATTS_DEMO_CHAR_VAL_LEN_MAX,
     .attr_len     = sizeof(char1_str),
     .attr_value   = char1_str,
 };
 
-uint8_t adv_config_done = 0;
+static uint8_t adv_config_done = 0;
 
 
-uint8_t adv_service_uuid128[32] = {
+static uint8_t adv_service_uuid128[32] = {
     /* LSB <--------------------------------------------------------------------------------> MSB */
     //first uuid, 16bit, [12],[13] is the value
     0xfb, 0x34, 0x9b, 0x5f, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0xEE, 0x00, 0x00, 0x00,
@@ -59,7 +59,7 @@ uint8_t adv_service_uuid128[32] = {
 // The length of adv data must be less than 31 bytes
 //static uint8_t test_manufacturer[TEST_MANUFACTURER_DATA_LEN] =  {0x12, 0x23, 0x45, 0x56};
 //adv data
-esp_ble_adv_data_t adv_data = {
+static esp_ble_adv_data_t adv_data = {
     .set_scan_rsp = false,
     .include_name = true,
     .include_txpower = false,
@@ -75,7 +75,7 @@ esp_ble_adv_data_t adv_data = {
     .flag = (ESP_BLE_ADV_FLAG_GEN_DISC | ESP_BLE_ADV_FLAG_BREDR_NOT_SPT),
 };
 // scan response data
-esp_ble_adv_data_t scan_rsp_data = {
+static esp_ble_adv_data_t scan_rsp_data = {
     .set_scan_rsp = true,
     .include_name = true,
     .include_txpower = true,
@@ -91,8 +91,7 @@ esp_ble_adv_data_t scan_rsp_data = {
     .flag = (ESP_BLE_ADV_FLAG_GEN_DISC | ESP_BLE_ADV_FLAG_BREDR_NOT_SPT),
 };
 
-
- esp_ble_adv_params_t adv_params = {
+ static esp_ble_adv_params_t adv_params = {
     .adv_int_min        = 0x20,
     .adv_int_max        = 0x40,
     .adv_type           = ADV_TYPE_IND,
@@ -103,8 +102,7 @@ esp_ble_adv_data_t scan_rsp_data = {
     .adv_filter_policy = ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY,
 };
 
-
-prepare_type_env_t a_prepare_write_env;
+static prepare_type_env_t a_prepare_write_env;
 
 static struct gatts_profile_inst gl_profile_tab[PROFILE_NUM] = {
     [PROFILE_A_APP_ID] = {
@@ -112,7 +110,6 @@ static struct gatts_profile_inst gl_profile_tab[PROFILE_NUM] = {
         .gatts_if = ESP_GATT_IF_NONE,       /* Not get the gatt_if, so initial is ESP_GATT_IF_NONE */
     }
 };
-
 
  void gap_event_handler(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t *param)
 {
@@ -405,7 +402,7 @@ void example_exec_write_event_env(prepare_type_env_t *prepare_write_env, esp_ble
 }
 
 
- void gatts_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp_ble_gatts_cb_param_t *param)
+void gatts_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp_ble_gatts_cb_param_t *param)
 {
     /* If event is register event, store the gatts_if for each profile */
     if (event == ESP_GATTS_REG_EVT) {
@@ -492,5 +489,5 @@ void ble_server_init()
         ESP_LOGE(GATTS_TAG, "set local  MTU failed, error code = %x", local_mtu_ret);
     }
 
-    return;
+   return;
 }
