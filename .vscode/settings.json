@@ -9,5 +9,10 @@
   },
   "C_Cpp.intelliSenseEngineFallback": "Enabled",
   "idf.portWin": "COM3",
-  "C_Cpp.errorSquiggles": "Disabled"
+  "C_Cpp.errorSquiggles": "Disabled",
+  "files.associations": {
+    "*.ipp": "c",
+    "bleserver.h": "c",
+    "esp_bt.h": "c"
+  }
 }

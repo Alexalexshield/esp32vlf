@@ -271,6 +271,7 @@ C:/Users/Shchitnikov/Documents/GitHub/ESP32/mcpwm_basic_config/build/esp-idf/boo
 C:/Users/Shchitnikov/Documents/GitHub/ESP32/mcpwm_basic_config/build/esp-idf/bootloader/CMakeFiles/edit_cache.dir
 C:/Users/Shchitnikov/Documents/GitHub/ESP32/mcpwm_basic_config/build/esp-idf/bootloader/CMakeFiles/rebuild_cache.dir
 C:/Users/Shchitnikov/Documents/GitHub/ESP32/mcpwm_basic_config/build/esp-idf/bootloader/CMakeFiles/list_install_components.dir
+C:/Users/Shchitnikov/Documents/GitHub/ESP32/mcpwm_basic_config/build/esp-idf/bt/CMakeFiles/__idf_bt.dir
 C:/Users/Shchitnikov/Documents/GitHub/ESP32/mcpwm_basic_config/build/esp-idf/bt/CMakeFiles/install/local.dir
 C:/Users/Shchitnikov/Documents/GitHub/ESP32/mcpwm_basic_config/build/esp-idf/bt/CMakeFiles/install.dir
 C:/Users/Shchitnikov/Documents/GitHub/ESP32/mcpwm_basic_config/build/esp-idf/bt/CMakeFiles/edit_cache.dir
