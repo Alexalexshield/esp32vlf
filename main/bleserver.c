@@ -148,6 +148,7 @@ static struct gatts_profile_inst gl_profile_tab[PROFILE_NUM] = {
                   param->update_conn_params.conn_int,
                   param->update_conn_params.latency,
                   param->update_conn_params.timeout);
+
         break;
     default:
         break;

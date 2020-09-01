@@ -23,7 +23,6 @@
 #include "driver/mcpwm.h"
 #include "soc/mcpwm_periph.h"
 
-
 #include "vlftx.h"
 #include "bleserver.h"
 
@@ -33,12 +32,13 @@ void app_main()
 
     ble_server_init();
 
-    init_vlf_tx();
-    
-    uint8_t local_message = ALARM_CODE;
-    start_vlf_tx(local_message);
-
-    // vTaskDelete(NULL);
+    printf("Testing MCPWM...\n");
+    xTaskCreate(mcpwm_config, "mcpwm_config", 4096, NULL, 5, NULL);
+    static const uint8_t *vlf_message = TEST_CODE;
+    for(;;){
+    xTaskCreate(start_vlf_tx, "start_vlf", 4096, (void*)vlf_message, 5, NULL);
+    vTaskDelay(200 / portTICK_PERIOD_MS);
+    }
 
 }
 
