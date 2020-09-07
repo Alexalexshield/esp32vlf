@@ -72,12 +72,12 @@ void start_vlf_tx(void *arg){
     for (int i = 0; i < 8; i++){
         if (mask[i]==1)
         {
-            printf("Send..1\n");
+           // printf("Send..1\n");
             xTaskCreate(vlf_tx_one, "vlf_tx_one", 4096, NULL, 5, NULL);
         }
         else
         {        
-            printf("Send..0\n");
+          //  printf("Send..0\n");
             xTaskCreate(vlf_tx_zero, "vlf_tx_zero", 4096, NULL, 5, NULL);
         }
 

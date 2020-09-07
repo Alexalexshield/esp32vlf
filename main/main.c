@@ -25,20 +25,30 @@
 
 #include "vlftx.h"
 #include "bleserver.h"
+#include "uartapp.h"
 
 
 void app_main()
 {
+    uart_init();
 
     ble_server_init();
 
     printf("Testing MCPWM...\n");
     xTaskCreate(mcpwm_config, "mcpwm_config", 4096, NULL, 5, NULL);
+
+    xTaskCreate(rx_task, "uart_rx_task", 1024*2, NULL, configMAX_PRIORITIES, NULL);
+    //xTaskCreate(tx_task, "uart_tx_task", 1024*2, NULL, configMAX_PRIORITIES-1, NULL);
+
     static const uint8_t *vlf_message = TEST_CODE;
     for(;;){
-    xTaskCreate(start_vlf_tx, "start_vlf", 4096, (void*)vlf_message, 5, NULL);
-    vTaskDelay(200 / portTICK_PERIOD_MS);
+        // if (uart_data[0]!=0)
+        // {
+        //     sendData("UART_TX", uart_data);
+        //     uart_data[0] = 0;
+        // }
+
+        xTaskCreate(start_vlf_tx, "start_vlf", 4096, (void*)vlf_message, 5, NULL);
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
-
 }
-
