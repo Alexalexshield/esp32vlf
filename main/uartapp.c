@@ -6,7 +6,12 @@
 #include "string.h"
 #include "driver/gpio.h"
 
+#include "vlftx.h"
 #include "uartapp.h"
+#include "cJSON.h"
+#include "jsonapp.h"
+
+extern vlf_config_t vlf_configuration;
 
 void uart_init(void) {
     
@@ -18,16 +23,6 @@ void uart_init(void) {
     uart_config.flow_ctrl = UART_HW_FLOWCTRL_DISABLE;
     uart_config.rx_flow_ctrl_thresh = 122;
     uart_config.use_ref_tick = true;
-
-    // const uart_config_t uart_config = {
-    //     .baud_rate = 115200,
-    //     .data_bits = UART_DATA_8_BITS,
-    //     .parity = UART_PARITY_DISABLE,
-    //     .stop_bits = UART_STOP_BITS_1,
-    //     .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
-    //     .source_clk = UART_SCLK_APB,
-    // };
-    
 
     uart_param_config(UART_NUM_1, &uart_config);
     uart_set_pin(UART_NUM_1, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
@@ -43,7 +38,6 @@ int sendData(const char* logName, const char* data)
     return txBytes;
 }
 
-
 void rx_task(void *arg)
 {
     static const char *RX_TASK_TAG = "RX_TASK";
@@ -52,10 +46,14 @@ void rx_task(void *arg)
     while (1) {
         const int rxBytes = uart_read_bytes(UART_NUM_1, uart_data, RX_BUF_SIZE, 1000 / portTICK_RATE_MS);
         if (rxBytes > 0) {
-            uart_data[rxBytes] = 0;
+			uart_data[rxBytes] = 0;
+			app_json_deserialize((char*) uart_data);
             ESP_LOGI(RX_TASK_TAG, "Read %d bytes: '%s'", rxBytes, uart_data);
             ESP_LOG_BUFFER_HEXDUMP(RX_TASK_TAG, uart_data, rxBytes, ESP_LOG_INFO);
+            
+            uart_flush(UART_NUM_1);
         }
     }
+    
     free(uart_data);
 }

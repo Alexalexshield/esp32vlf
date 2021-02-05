@@ -12,6 +12,12 @@
 #include "soc/mcpwm_periph.h"
 #include "vlftx.h"
 
+uint8_t ALARM_CODE[] = {0,0,1,0,1,1,0,0};
+uint8_t TEST_CODE[]  = {0,0,1,0,1,1,0,1};
+uint8_t TEST_POWER[] = {1,1,1,1,1,1,1,1};
+
+extern vlf_config_t vlf_configuration;
+
 void mcpwm_gpio_initialize()
 {
     printf("initializing mcpwm gpio...\n");
@@ -20,12 +26,6 @@ void mcpwm_gpio_initialize()
         .mcpwm0b_out_num = GPIO_PWM0B_OUT,
     };
     mcpwm_set_pin(MCPWM_UNIT_0, &pin_config);
-
-
-    // gpio_pad_select_gpio(GPIO_R_EN);
-    // gpio_pad_select_gpio(GPIO_L_EN);
-    // gpio_set_direction(GPIO_R_EN, GPIO_MODE_OUTPUT);
-    // gpio_set_direction(GPIO_L_EN, GPIO_MODE_OUTPUT);
     gpio_config_t io_conf;
     io_conf.intr_type = GPIO_INTR_DISABLE;        //disable interrupt
     io_conf.mode = GPIO_MODE_OUTPUT;    //set as output mode
@@ -33,7 +33,6 @@ void mcpwm_gpio_initialize()
     io_conf.pull_down_en = 1;     //enable pull-down mode
     io_conf.pull_up_en = 0;     //disable pull-up mode
     gpio_config(&io_conf);    //configure GPIO with the given settings
-
 }
 
 
@@ -49,7 +48,7 @@ void mcpwm_config(void *arg)
     printf("Configuring Initial Parameters of mcpwm...\n");
     mcpwm_config_t pwm_config;
     pwm_config.frequency = 8000;    //frequency = 1000Hz
-    pwm_config.cmpr_a = 50.0;       //duty cycle of PWMxA = 60.0%
+    pwm_config.cmpr_a = 50.0;       //duty cycle of PWMxA = 50.0%
     pwm_config.cmpr_b = 50.0;       //duty cycle of PWMxb = 50.0%
     pwm_config.counter_mode = MCPWM_UP_COUNTER;
     pwm_config.duty_mode = MCPWM_DUTY_MODE_1;
@@ -64,45 +63,56 @@ void mcpwm_config(void *arg)
     vTaskDelete(NULL);
 }
 
+void set_vlf_configuration(vlf_config_t vlf)
+{
+    mcpwm_config_t pwm_config;
+    pwm_config.frequency = vlf.freq;    //frequency = 1000Hz
+    pwm_config.cmpr_a = 50.0;       //duty cycle of PWMxA = 50.0%
+    pwm_config.cmpr_b = 50.0;       //duty cycle of PWMxb = 50.0%
+    pwm_config.counter_mode = MCPWM_UP_COUNTER;
+    pwm_config.duty_mode = MCPWM_DUTY_MODE_1;
+    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);   //Configure PWM0A & PWM0B with above settings
+    int power = 100; //100us //vlf.power*100/vlf_freq; %complex equation to tune power!!!!!
+    mcpwm_deadtime_enable(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, power, power);   //Enable deadtime on PWM0A and PWM0B with red = (1000)*100ns on PWM0A
+}
+
 void start_vlf_tx(void *arg){
-    uint8_t message = (uint8_t*)arg;
+    //uint8_t message = (uint8_t*)arg;
+    // printf("Freq is..%d\n",message);
     //uint8_t mask = 0b00000001;
-
-    uint8_t mask[8] = {0,0,1,0,1,1,0,0};
-    for (int i = 0; i < 8; i++){
-        if (mask[i]==1)
-        {
-           // printf("Send..1\n");
-            xTaskCreate(vlf_tx_one, "vlf_tx_one", 4096, NULL, 5, NULL);
-        }
-        else
-        {        
-          //  printf("Send..0\n");
-            xTaskCreate(vlf_tx_zero, "vlf_tx_zero", 4096, NULL, 5, NULL);
-        }
-
-        vTaskDelay(10 / portTICK_PERIOD_MS);
+    uint8_t *p = NULL;
+    switch(vlf_configuration.command){
+        case(ALARM): p = ALARM_CODE; break;
+        case(TEST): p = TEST_CODE; break;
+        case(POWER): p = TEST_POWER; break;
+        default: break;//ESP_LOGI("JSON", "unknown command\n"); 
     }
-    // for (int i = 8; i >= 0; i--){
-    //     mask = mask << i;
-    //     if (message & mask)
-    //     {
-    //         mcpwm_start(MCPWM_UNIT_0, MCPWM_TIMER_0);
-    //     }
-    //     else
-    //     {
-    //         mcpwm_stop(MCPWM_UNIT_0, MCPWM_TIMER_0);
-    //     }
-    //     vTaskDelay(1000 / portTICK_PERIOD_MS);
-    // }
+
+    if (p != NULL){
+        for (uint8_t i = 0; i < 8; i++){//sizeof(p)
+            if (*(p+i)==1)
+            {
+                printf("Send..1\n");
+                xTaskCreate(vlf_tx_one_ask, "vlf_tx_one", 4096, NULL, 5, NULL);
+            }
+            else
+            {        
+                printf("Send..0\n");
+                xTaskCreate(vlf_tx_zero_ask, "vlf_tx_zero", 4096, NULL, 5, NULL);
+            }
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        }
+    }
+    xTaskCreate(vlf_tx_zero_ask, "vlf_tx_zero", 4096, NULL, 5, NULL);
     vTaskDelete( NULL );
 }
-void vlf_tx_one(void *arg){
+
+void vlf_tx_one_ask(void *arg){
     gpio_set_level(GPIO_R_EN, 1);//mcpwm_start(MCPWM_UNIT_0, MCPWM_TIMER_0);
     gpio_set_level(GPIO_L_EN, 1);//mcpwm_start(MCPWM_UNIT_0, MCPWM_TIMER_0);
     vTaskDelete( NULL );
 }
-void vlf_tx_zero(void *arg){
+void vlf_tx_zero_ask(void *arg){
     gpio_set_level(GPIO_R_EN, 0);//mcpwm_start(MCPWM_UNIT_0, MCPWM_TIMER_0);
     gpio_set_level(GPIO_L_EN, 0);//mcpwm_start(MCPWM_UNIT_0, MCPWM_TIMER_0);
     vTaskDelete( NULL );

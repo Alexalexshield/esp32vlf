@@ -16,6 +16,9 @@
     "esp_bt.h": "c",
     "uart.h": "c",
     "esp_system.h": "c",
-    "uart_struct.h": "c"
+    "uart_struct.h": "c",
+    "cjson.h": "c",
+    "btc_gap_ble.h": "c",
+    "*.inc": "c"
   }
 }

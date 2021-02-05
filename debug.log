@@ -1,3 +1,3 @@
-2020-08-29 13:23:59,170 - Debug Adapter (main) - CRITICAL - Printed cmd: DEBUG_ADAPTER_STARTED
-2020-08-29 13:23:59,179 - Debug Adapter (main) - CRITICAL - Printed cmd: DEBUG_ADAPTER_READY2CONNECT
-2020-08-29 13:24:19,428 - Debug Adapter (main) - CRITICAL - Printed cmd: DEBUG_ADAPTER_STOPPED
+2021-02-04 17:03:59,297 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_STARTED
+2021-02-04 17:03:59,309 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_READY2CONNECT
+2021-02-04 17:04:01,411 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_STOPPED

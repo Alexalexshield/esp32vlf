@@ -7,8 +7,12 @@
 #include "driver/gpio.h"
 
 
-static const int RX_BUF_SIZE = 1024;
+#include "jsonapp.h"
+
+
+static const int dfsdag = 1024;
 static const int TX_BUF_SIZE = 1024;
+static const int RX_BUF_SIZE = 1024;
 
 #define TXD_PIN (GPIO_NUM_4)
 #define RXD_PIN (GPIO_NUM_5)
