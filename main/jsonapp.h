@@ -21,12 +21,8 @@
     // char *uartstr;
     // uartstr = (char*)malloc(90);
     // uartstr = app_json_serialize();
-    //  {
-    //         "command":      0,
-    //         "freq": 8000,
-    //         "modulation": "ASK",
-    //         "flag_on_air": 1
-    //  }
+  
+  
     // app_json_deserialize(uartstr);
 
 

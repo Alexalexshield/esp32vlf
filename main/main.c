@@ -49,7 +49,6 @@ void app_main()
 
         if (vlf_configuration.flag_on_air)
         {
-            //xTaskCreate(start_vlf_tx, "start_vlf", 4096, (void*)vlf_configuration.freq, 5, NULL);
             xTaskCreate(start_vlf_tx, "start_vlf", 4096, NULL, 5, NULL);
             ptr_vlf_configuration->flag_on_air=false;
             vTaskDelay(1000 / portTICK_PERIOD_MS);

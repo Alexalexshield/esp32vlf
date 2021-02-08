@@ -38,10 +38,8 @@
 
 #include "jsonapp.h"
 
-// static uint8_t ble_manufacturer[BLE_MANUFACTURER_DATA_LEN] =  {0x12, 0x23, 0x45, 0x56};
 static uint32_t ble_add_char_pos;
 uint8_t adv_config_done = 0;
-
 
 #define BLE_SERVICE_UUID_SIZE ESP_UUID_LEN_128
 // Add more UUIDs for more then one Service
@@ -419,7 +417,7 @@ void char1_write_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp
         //esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gl_profile.char_handle,
                                                 // strlen((const char*)param->write.value) + sizeof(""), param->write.value, false);
 
-        //gatts_check_callback(event, gatts_if, param);
+        gatts_check_callback(event, gatts_if, param);
         break;
     }
     case ESP_GATTS_WRITE_EVT: {
@@ -441,7 +439,7 @@ void char1_write_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp
                                                 strlen((const char*)param->write.value) + sizeof(""), param->write.value, false);
         
         
-        //gatts_check_callback(event, gatts_if, param);
+        gatts_check_callback(event, gatts_if, param);
         break;
     }
     case ESP_GATTS_EXEC_WRITE_EVT:

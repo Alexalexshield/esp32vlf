@@ -42,10 +42,8 @@
 #define GATTS_SERVICE_UUID   0x0001
 #define GATTS_CHAR_NUM		1
 #define GATTS_NUM_HANDLE     1+(3*GATTS_CHAR_NUM)
-// #define BLE_DEVICE_NAME            "VLF_wearable"
 #define BLE_MANUFACTURER_DATA_LEN  4
 #define GATTS_CHAR_VAL_LEN_MAX		22
-
 
 
 #define BLE_DEVICE_NAME            "VLF_TX"

@@ -39,12 +39,7 @@ void mcpwm_config(void *arg);
 #define  ALARM  0
 #define  TEST   1
 #define  POWER  2
-
-// typedef enum eCOMMANDS
-// {
-//     ALARM,
-//     TEST
-// }COMMANDS;
+#define  QUICKSEARCH 3
 
 typedef struct{
     int command;
