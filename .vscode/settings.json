@@ -19,6 +19,7 @@
     "uart_struct.h": "c",
     "cjson.h": "c",
     "btc_gap_ble.h": "c",
-    "*.inc": "c"
+    "*.inc": "c",
+    "esp_gap_ble_api.h": "c"
   }
 }

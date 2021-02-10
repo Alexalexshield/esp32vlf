@@ -35,13 +35,12 @@ vlf_config_t vlf_configuration;
 
 void app_main()
 {
-    uart_init();
-    xTaskCreate(rx_task, "uart_rx_task", RX_BUF_SIZE*2, NULL, configMAX_PRIORITIES, NULL);
+    // uart_init();
+    // xTaskCreate(rx_task, "uart_rx_task", RX_BUF_SIZE*2, NULL, configMAX_PRIORITIES, NULL);
+    ble_server_init();
 
     printf("Testing MCPWM...\n");
     xTaskCreate(mcpwm_config, "mcpwm_config", 4096, NULL, 5, NULL);
-
-    ble_server_init();
 
     ptr_vlf_configuration = &vlf_configuration;  
    
@@ -54,9 +53,9 @@ void app_main()
             vTaskDelay(1000 / portTICK_PERIOD_MS);
 
             
-        // uint8_t temp_value[] = {2,4,5,7,8,9,12,14,124,22};
-        // esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gl_profile_tab[PROFILE_A_APP_ID].char_handle,
-        //                                         sizeof(temp_value), temp_value, false);
+    //     // uint8_t temp_value[] = {2,4,5,7,8,9,12,14,124,22};
+    //     // esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gl_profile_tab[PROFILE_A_APP_ID].char_handle,
+    //     //                                         sizeof(temp_value), temp_value, false);
         
         }
         vTaskDelay(100); 
